@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Loading...</title>
+
+  <!-- Common -->
+  <link rel="stylesheet" href="/common/common.css">
+  <script src="/common/authCookies.js"></script>
+  
+  <!-- Page specific & library -->
+  <script src="/folder/fetch.js"></script>
+
+  <!-- Page specific -->
+  <link rel="stylesheet" href="/folder/folder.css">
+  <script defer src="/folder/filesList.js"></script>
+  <script defer src="/folder/folder.js"></script>
+
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="container nav">
+    <h2 class="files-title">Files: </h2>
+    <ul id="files">
+      <li id="files-loading-placeholder">Loading Files...</li>
+    </ul>
+    <hr>
+    <!-- CREATE NEW FILE SECTION -->
+    <div id="create-file-div">
+      <h3>new</h3>
+      <input type="text" name="new-file" id="new-file-name" size="16">
+      <button id="new-file-submit" onclick="createFile()">create</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="container large to-load">
+    <!-- TITLE & FILE CONTENTS -->
+    <input type="text" name="id="file-title" id="file-title-placeholder" value="Loading">
+    <textarea id="file-content-placeholder">Loading file contents...</textarea>
+    <!-- BOTTOM BUTON -->
+    <button id="save-file" onclick="saveFile()">save</button>
+  </div>
+</body>
+</html>

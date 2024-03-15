@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Markdown</title>
+
+  <!-- Common -->
+  <link rel="stylesheet" href="/common/common.css">
+  <script defer src="/common/authCookies.js"></script>
+
+  <!-- Page specific -->
+  <link rel="stylesheet" href="/index/home.css">
+  <script defer src="/index/home.js"></script>
+</head>
+<body>
+  <div class="container large">
+    <header>
+      <h1>Markdown Editor</h1>
+      <p>Write, save, and share your markdown texts easily.</p>
+    </header>
+
+    <main class="main">
+      <section>
+        <h2>Create your own folder:</h2>
+        <input placeholder="Folder Name" type="text" name="folder" id="folder-name-input" class="input"><br>
+        <span id="result-placeholder"></span>
+        <button type="button" class="input" onclick="newFolder()">Create</button>
+      </section>
+    </main>
+
+    <footer class="bottom">
+      <p>Author: Lucas Schwalm. <a href="#">Github</a></p>
+    </footer>
+  </div>
+</body>
+</html>

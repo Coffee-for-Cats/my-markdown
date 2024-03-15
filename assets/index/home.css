@@ -1,0 +1,36 @@
+.container > * {
+  margin: 1rem 0;
+  padding: .4rem;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-top: .4rem;
+}
+
+main.main {
+  margin: 3rem 0 4rem 0;
+}
+
+.input {
+  margin: .4rem 0;
+  padding: .2rem .6rem;
+  font-size: 1.4rem;
+}
+
+footer.bottom {
+  position: absolute;
+  bottom: 2rem;
+}
+
+.red {
+  color: red;
+}
