@@ -1,5 +1,8 @@
 const fileTitlePlaceholder = document.getElementById('file-title-placeholder')
 const fileContentPlaceholder = document.getElementById('file-content-placeholder')
+const markdownPlaceholder = document.getElementById('markdown-content-placeholder')
+const saveButton = document.getElementById('save-file');
+const editButton = document.getElementById('edit-file')
 const pageTitlePlaceholder = document.getElementById('page-title')
 const pageLocation = window.location.pathname
 const pageLocationArray = pageLocation.split('/').filter((s) => s != '')
@@ -26,6 +29,8 @@ async function loadFolder() {
 async function loadFile() {
   fileTitlePlaceholder.value = fileId
   const fileContent = await getFile(folderId, fileId)
+
+  markdownPlaceholder.innerHTML = marked.parse(fileContent)
   fileContentPlaceholder.innerHTML = fileContent
 }
 
@@ -57,4 +62,29 @@ async function saveFile() {
   if (newTitle !== fileId) {
     window.location.href = `${folderId}`
   }
+
+  // hidden markdown
+  markdownPlaceholder.classList.remove("hidden");
+  // display textbox
+  fileContentPlaceholder.classList.add("hidden");
+
+  // display  edit button
+  editButton.classList.remove("hidden");
+  // hidden save button
+  saveButton.classList.add("hidden");
+
+  // updates the markdown
+  markdownPlaceholder.innerHTML = marked.parse(newText)
+}
+
+function toggleEdit() {
+  // display textbox
+  fileContentPlaceholder.classList.remove("hidden");
+  // hidden  markdown
+  markdownPlaceholder.classList.add("hidden");
+
+  // display save button
+  saveButton.classList.remove("hidden");
+  // hidden  edit button
+  editButton.classList.add("hidden");
 }

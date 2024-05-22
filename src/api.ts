@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 
 export const api = new Hono()
 
-import { Folder } from './models'
+import { Database } from './models'
 
 interface FolderRef {
   auth: string,
@@ -14,25 +14,17 @@ api.post('/new-folder', async c => {
   const db: any = c.env['my-markdown-db'];
   const { auth, name } = await c.req.json();
 
-  // processa o name como url-encoded.
-  const folderId = encodeURI(name.replaceAll(/\s/g, '-'))
-
-  // doesn't allow the modification of an already existing folder adm.
-  const exists = await db.get(folderId);
-  if (exists) {
+  const folderExists = await Database.getFolder(db, name);
+  if (folderExists) {
     return c.text('Error! This folder name is already in use.', 409);
   }
 
-  // creates the folder with auth and name.
-  await db.put(
-    folderId,
-    new Folder(auth, name).json()
-  )
+  const folderId = await Database.createFolder(db, auth, name);
 
   return c.text(folderId);
 })
 
-// Create a new file in existing folder. Doesn't need text.
+// Create a new empty file
 api.post('/:folder/:file', async c => {
   const db: any = c.env['my-markdown-db'];
   // path params
@@ -41,31 +33,34 @@ api.post('/:folder/:file', async c => {
   const { auth } = await c.req.json();
 
   // Auth
-  const folderRef: FolderRef = JSON.parse(await db.get(folder));
+  const folderRef = await Database.getFolder(db, folder);
   if (!folderRef) {
     return c.text('Error! Folder does not exist.', 404);
   }
   if (folderRef.auth != auth) {
     return c.text('Error! Auth does not match!', 401);
   }
+  if (folderRef.files.includes(file)) {
+    return c.text('Error! File already exists!', 401);
+  }
 
-  // Update folder file list
-  folderRef.files.push(file);
-  await db.put(
-    folder,
-    JSON.stringify(folderRef)
-  )
-
-  // Creates the file with the text in body
-  await db.put(
-    `${folder}/${file}`,
-    '(empty)'
-  )
+  await Database.createEmptyFile(db, folder, file);
 
   return c.text('Ok!')
 })
 
-// Modify existing file in existing folder. Needs text.
+// Gets existing file content
+api.get('/:folder/:file', async c => {
+  const db: any = c.env['my-markdown-db'];
+  // path params
+  const { folder, file } = c.req.param()
+
+  const fileRef = await Database.getFileFromName(db, folder, file)
+
+  return c.text(fileRef)
+})
+
+// Modify existing file.
 api.put('/:folder/:file', async c => {
   const db: any = c.env['my-markdown-db'];
   // path params
@@ -77,8 +72,7 @@ api.put('/:folder/:file', async c => {
   const encodedTitle = encodeURI(title.replaceAll(/\s/g, '-'))
   const newFileName = encodedTitle || file;
 
-  // Original folder
-  const folderRef: FolderRef = JSON.parse(await db.get(folder));
+  const folderRef: FolderRef = await Database.getFolder(db, folder);
   
   // Auth
   if (!folderRef) {
@@ -87,27 +81,12 @@ api.put('/:folder/:file', async c => {
   if (folderRef.auth != auth) {
     return c.text('Error! Auth does not match!', 401);
   }
-  const fileExists = await db.get(`${folder}/${file}`)
+  const fileExists = await Database.getFileFromName(db, folder, file)
   if (!fileExists) {
     return c.text('Error! File does not exist', 404);
   }
 
-  // Modify the file with the text in body
-  await db.delete(`${folder}/${file}`)
-  await db.put(`${folder}/${newFileName}`,
-    text
-  )
-
-  // Updates folder (with the reference to this object)
-  folderRef.files.forEach((fileRef, index) => {
-    if (fileRef === file) {
-      folderRef.files[index] = newFileName;
-    }
-  })
-
-  // saves to database the new folder reference
-  await db.delete(folder);
-  await db.put(folder, JSON.stringify(folderRef));
+  await Database.updateExistingFile(db, folder, file, newFileName, text)
 
   return c.text('Ok!');
 })
@@ -118,29 +97,8 @@ api.get('/:folder', async c => {
   // path params
   const { folder } = c.req.param();
   
-  const dbResponse = await db.get(folder)
-    
-  if (!dbResponse) return c.text('Error! Folder does not exist.', 404);
+  const folderRef = await Database.getFolder(db, folder);
+  if (!folderRef) return c.text('Error! Folder does not exist.', 404);
   
-  const { files } = JSON.parse(dbResponse)
-  return c.json(files)
-})
-
-// Get existing file from existing folder.
-// Doesn't need auth
-api.get('/:folder/:file', async c => {
-  const db: any = c.env['my-markdown-db'];
-  // path params
-  const { folder, file } = c.req.param()
-
-  const response = await db.get(`${folder}/${file}`);
-
-  console.log('text: ', response);
-  return c.text(response)
-
-  // if (response) {
-  //   return c.text(response);
-  // } else {
-  //   return c.text('Error! Folder or file does not exist.', 404);
-  // }
+  return c.json(folderRef.files)
 })

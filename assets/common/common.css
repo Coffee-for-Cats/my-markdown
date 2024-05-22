@@ -11,6 +11,10 @@
   color: #222;
 }
 
+.hidden {
+  display: none !important; 
+}
+
 body {
   display: flex;
   justify-content: center;

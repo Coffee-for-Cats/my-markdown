@@ -1,11 +1,13 @@
 const defaultApiURL = `http://${window.location.host}/api`;
 
+// GET files[names]
 async function getFolder(folderId) {
   const fetchURL = defaultApiURL + `/${folderId}`;
   const response = await fetch(fetchURL)
   return await response.json()
 }
 
+// GET existing file
 async function getFile(folderId, fileId) {
   const fetchURL = defaultApiURL + `/${folderId}/${fileId}`
   const response = await fetch(fetchURL)
@@ -13,6 +15,7 @@ async function getFile(folderId, fileId) {
   return decodeURIComponent(content)
 }
 
+// POST a new file
 async function postFile(folderId, filename) {
   // change to https
   const fetchURL = defaultApiURL + `/${folderId}/${filename}`
@@ -26,6 +29,7 @@ async function postFile(folderId, filename) {
   return await newFilePath.text()
 }
 
+// POST existing file
 async function updateFile(folderId, fileId, newText, newTitle) {
   const newLineReplacedText = encodeURIComponent(newText.replace(/\\n/g, "\n"))
   console.log('sent: ', newLineReplacedText)

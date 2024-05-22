@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="/folder/folder.css">
   <script defer src="/folder/filesList.js"></script>
   <script defer src="/folder/folder.js"></script>
+    <!-- Markdown js engine -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 </head>
 <body>
@@ -30,7 +32,7 @@
     <!-- CREATE NEW FILE SECTION -->
     <div id="create-file-div">
       <h3>new</h3>
-      <input type="text" name="new-file" id="new-file-name" size="16">
+      <input type="text" name="new-file" id="new-file-name">
       <button id="new-file-submit" onclick="createFile()">create</button>
     </div>
   </nav>
@@ -39,9 +41,22 @@
   <div class="container large to-load">
     <!-- TITLE & FILE CONTENTS -->
     <input type="text" name="id="file-title" id="file-title-placeholder" value="Loading">
-    <textarea id="file-content-placeholder">Loading file contents...</textarea>
+    
+    <div id="file-content-container">
+      <!-- make invisible and turn visible at click -->
+      <textarea id="file-content-placeholder" class="hidden">Loading file contents...</textarea>
+      <div id="markdown-content-placeholder"></div>
+    </div>
     <!-- BOTTOM BUTON -->
-    <button id="save-file" onclick="saveFile()">save</button>
+    <div id="toolbar">
+      <button id="edit-file" onclick="toggleEdit()">
+        <img src="/common/edit-3.svg" alt="edit page ">
+      </button>
+      <!-- hidden -->
+      <button id="save-file" class="hidden" onclick="saveFile()">
+        <img src="/common/save.svg" alt="save page ">
+      </button>
+    </div>
   </div>
 </body>
 </html>
