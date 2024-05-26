@@ -29,22 +29,23 @@ api.post('/:folder/:file', async c => {
   const db: any = c.env['my-markdown-db'];
   // path params
   const { folder, file } = c.req.param();
+  const fileName = encodeURI(file.replaceAll(/\s/g, '-'));
   // body params
   const { auth } = await c.req.json();
 
   // Auth
   const folderRef = await Database.getFolder(db, folder);
   if (!folderRef) {
-    return c.text('Error! Folder does not exist.', 404);
+    return c.text('Error! Folder does not exist!', 404);
   }
   if (folderRef.auth != auth) {
     return c.text('Error! Auth does not match!', 401);
   }
-  if (folderRef.files.includes(file)) {
+  if (folderRef.files.includes(fileName)) {
     return c.text('Error! File already exists!', 401);
   }
 
-  await Database.createEmptyFile(db, folder, file);
+  await Database.createEmptyFile(db, folder, fileName);
 
   return c.text('Ok!')
 })

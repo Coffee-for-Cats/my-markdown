@@ -32,21 +32,30 @@ async function loadFile() {
 
   markdownPlaceholder.innerHTML = marked.parse(fileContent)
   fileContentPlaceholder.innerHTML = fileContent
+
+  // show toolbar
+  document.getElementById('toolbar').classList.remove('hidden')
+  // allow title editing
+  fileTitlePlaceholder.disabled = false;
 }
 
 // TODO
 function showNoFileOpen() {
   fileTitlePlaceholder.value = 'Open a file'
-  fileContentPlaceholder.innerHTML = 'Create a file or open an existing one by the navbar at your left.'
+  markdownPlaceholder.innerHTML = `
+  Open or create a new file in the left sidebar.
+  This field supports markdown.
+  Click on the pencil to edit, just remember to save!
+    `
 }
 
 if (fileId) loadFile()
 else showNoFileOpen()
 
 // create new file mini-form
-const newFileName = document.getElementById('new-file-name')
+const newFileName = document.getElementById('new-file-name').value.replace('/', '-')
 async function createFile() {
-  const fileName = await postFile(folderId, newFileName.value)
+  const fileName = await postFile(folderId, newFileName)
   console.log(fileName)
   loadFolder();
 }

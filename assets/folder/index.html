@@ -39,16 +39,17 @@
 
   <!-- MAIN -->
   <div class="container large to-load">
-    <!-- TITLE & FILE CONTENTS -->
-    <input type="text" name="id="file-title" id="file-title-placeholder" value="Loading">
+    <!-- TITLE -->
+    <input type="text" disabled name="id="file-title" id="file-title-placeholder" value="Loading">
     
+    <!-- FILE CONTENTS -->
     <div id="file-content-container">
-      <!-- make invisible and turn visible at click -->
+      <!-- file-content = raw text | markdown-content = formated html -->
       <textarea id="file-content-placeholder" class="hidden">Loading file contents...</textarea>
       <div id="markdown-content-placeholder"></div>
     </div>
-    <!-- BOTTOM BUTON -->
-    <div id="toolbar">
+    <!-- TOOLBAR -->
+    <div id="toolbar" class="hidden">
       <button id="edit-file" onclick="toggleEdit()">
         <img src="/common/edit-3.svg" alt="edit page ">
       </button>
