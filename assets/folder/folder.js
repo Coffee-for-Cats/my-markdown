@@ -53,8 +53,9 @@ if (fileId) loadFile()
 else showNoFileOpen()
 
 // create new file mini-form
-const newFileName = document.getElementById('new-file-name').value.replace('/', '-')
 async function createFile() {
+  const newFileName = document.getElementById('new-file-name').value.replace('/', '-')
+  //console.log(newFileName)
   const fileName = await postFile(folderId, newFileName)
   console.log(fileName)
   loadFolder();
